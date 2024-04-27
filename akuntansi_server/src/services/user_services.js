@@ -10,7 +10,13 @@ const register = async (user) => {
     return result;
 }
 
+const checkEmail = async (user) => {
+    const [result] = await connection.query('SELECT * FROM users WHERE email=?', [user.email]);
+    return result;
+}
+
 export default {
     login,
-    register
+    register,
+    checkEmail
 }
