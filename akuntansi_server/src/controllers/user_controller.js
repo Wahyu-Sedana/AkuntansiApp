@@ -21,7 +21,8 @@ const loginUser = async (req, res) => {
         }
     } catch (error) {
         return res.status(500).json({
-            message: error.message
+            message: error.message,
+            success: false
         });
     }
 }
@@ -34,24 +35,28 @@ const registerUser = async (req, res) => {
         if (checkEmail.length >= 1) {
             console.log('masuk pengecekan');
             return res.status(409).json({
-                message: 'Email already exists'
+                message: 'Email already exists',
+                success: true,
             });
         } else {
             const result = await user_services.register({username, email, password: hashPassword});
             console.log('masuk ga kesini', result);
             if (result.affectedRows > 0) {
                 return res.status(200).json({
-                    message: 'Registration successful'
+                    message: 'Registration successful',
+                    success: true
                 });
             } else {
                 return res.status(401).json({
-                    message: 'Registration failed'
+                    message: 'Registration failed',
+                    success: false
                 });
             }
         }
     } catch (error) {
         return res.status(500).json({
-            message: error.message
+            message: error.message,
+            success: false
         });
     }
 }

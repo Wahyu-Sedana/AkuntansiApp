@@ -13,11 +13,14 @@ class LoginResponseModel extends Equatable {
   @override
   List<Object?> get props => [data, success, message];
 
-  factory LoginResponseModel.fromJson(Map<String, dynamic> json) => LoginResponseModel(
-        data: json['data'] == null ? null : LoginDataModel.fromJson(json['data']),
-        message: json['message'] ?? '',
-        success: json['success'] ?? true,
-      );
+  factory LoginResponseModel.fromJson(Map<String, dynamic> json) {
+    List<dynamic> data = json['data'];
+    return LoginResponseModel(
+      data: data.isNotEmpty ? LoginDataModel.fromJson(data[0]) : null,
+      message: json['message'] ?? '',
+      success: json['success'] ?? true,
+    );
+  }
   Map<String, dynamic> toJson() => {
         'data': data == null ? '' : data!.toJson(),
         'message': message ?? '',

@@ -1,3 +1,5 @@
+import 'package:akuntansi_client/features/login/presentation/pages/login_page.dart';
+import 'package:akuntansi_client/features/register/presentation/providers/register_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,41 +9,50 @@ import '../../../../core/utils/colors.dart';
 import '../../../../core/utils/dimens.dart';
 import '../../../../core/utils/enums.dart';
 import '../../../../core/utils/helper.dart';
-import '../../../../core/utils/injection.dart';
-import '../../../../core/utils/session.dart';
 import '../../../../core/utils/styles.dart';
 import '../../../../core/utils/validation.dart';
-import '../../../forgotPassword/presentation/pages/forgot_password_page.dart';
-import '../../../home/presentation/pages/home_page.dart';
-import '../providers/login_provider.dart';
-import '../providers/login_state.dart';
+import '../providers/register_state.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({Key? key}) : super(key: key);
+class RegisterForm extends StatefulWidget {
+  const RegisterForm({Key? key}) : super(key: key);
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<RegisterForm> createState() => _RegisterFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
-  void submit() {
-    final provider = context.read<LoginProvider>();
-    provider.doLoginApi().listen((state) async {
+class _RegisterFormState extends State<RegisterForm> {
+  void submit(
+    String username,
+    String email,
+    String password,
+  ) {
+    final provider = context.read<RegisterProvider>();
+    provider
+        .doRegisterApi(ctx: context, username: username, email: email, password: password)
+        .listen((state) async {
       switch (state.runtimeType) {
-        case LoginLoading:
+        case RegisterLoading:
           showLoading();
           break;
-        case LoginFailure:
-          final msg = (state as LoginFailure).failure;
+        case RegisterFailure:
+          final msg = (state as RegisterFailure).failure;
           dismissLoading();
           showToast(message: msg);
           break;
-        case LoginSuccess:
+        case RegisterSuccess:
+          final data = (state as RegisterSuccess).data;
           dismissLoading();
-          final session = locator<Session>();
-          session.setLoggedIn = true;
-          showToast(message: "Successfully logged in");
-          Navigator.pushNamedAndRemoveUntil(context, HomePage.routeName, (route) => false);
+          if (data!.success == true) {
+            showToast(message: "Register Successful");
+            Navigator.pushReplacementNamed(context, LoginPage.routeName);
+          } else {
+            if (data.message.toString().contains("email")) {
+              showToast(message: "email already registered");
+            } else {
+              showToast(message: "Register Failed");
+            }
+          }
+
           break;
       }
     });
@@ -49,7 +60,7 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LoginProvider>(
+    return Consumer<RegisterProvider>(
       builder: (context, provider, _) => Form(
         key: provider.formKey,
         child: Padding(
@@ -58,6 +69,17 @@ class _LoginFormState extends State<LoginForm> {
           ),
           child: Column(
             children: [
+              CustomTextField(
+                title: "Username",
+                controller: provider.usernameController,
+                inputType: TextInputType.name,
+                isError: provider.usernameError,
+                fieldValidator: ValidationHelper(
+                  isError: (bool value) => provider.setUsernameError = value,
+                  typeField: TypeField.username,
+                ).validate(),
+              ),
+              mediumVerticalSpacing(),
               CustomTextField(
                 title: "Email",
                 controller: provider.emailController,
@@ -81,34 +103,18 @@ class _LoginFormState extends State<LoginForm> {
                 ).validate(),
               ),
               largeVerticalSpacing(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        ForgotPasswordPage.routeName,
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20.0),
-                      child: Text(
-                        "Forgot Password?",
-                        style: forgotPasStyle,
-                      ),
-                    ),
-                  )
-                ],
-              ),
               CustomButton(
                   text: Text(
-                    "SIGN IN",
+                    "SIGN UP",
                     style: txtButtonStyle,
                   ),
                   event: () async {
                     if (provider.formKey.currentState!.validate()) {
-                      submit();
+                      submit(
+                        provider.usernameController.text,
+                        provider.emailController.text,
+                        provider.passwordController.text,
+                      );
                     }
                   },
                   bgColor: primaryDarkColor)

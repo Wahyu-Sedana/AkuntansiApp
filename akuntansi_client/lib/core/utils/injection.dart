@@ -1,4 +1,9 @@
 import 'package:akuntansi_client/core/utils/session.dart';
+import 'package:akuntansi_client/features/register/data/datasources/register_datasource.dart';
+import 'package:akuntansi_client/features/register/data/repositories/register_repository_implementation.dart';
+import 'package:akuntansi_client/features/register/domain/repositories/register_repository.dart';
+import 'package:akuntansi_client/features/register/domain/usecases/do_register.dart';
+import 'package:akuntansi_client/features/register/presentation/providers/register_provider.dart';
 import 'package:akuntansi_client/features/splash/presentation/providers/splash_provider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
@@ -41,6 +46,11 @@ Future<void> init() async {
       dataSource: locator<LoginDataSource>(),
     ),
   );
+
+  locator.registerLazySingleton<RegisterRepository>(() => RegistrationRepostitoryImplementation(
+        locator<NetworkInfo>(),
+        dataSource: locator<RegisterDataSource>(),
+      ));
   locator.registerLazySingleton<CurrencyRepository>(
     () => CurrencyRepositoryImplementation(
       dataSource: locator<CurrencyDataSource>(),
@@ -53,14 +63,19 @@ Future<void> init() async {
       () => LoginDataSourceImplementation(dio: locator<Dio>()));
   locator.registerLazySingleton<CurrencyDataSource>(
       () => CurrencyDataSourceImplementation(dio: locator<Dio>()));
+  locator.registerLazySingleton<RegisterDataSource>(
+      () => RegisterDataSourceImplementation(dio: locator<Dio>()));
 
   //usecase
   locator.registerLazySingleton<DoLogin>(() => DoLogin(repository: locator<LoginRepository>()));
   locator.registerLazySingleton<GetCurrency>(() => GetCurrency(locator<CurrencyRepository>()));
+  locator.registerLazySingleton<DoRegister>(
+      () => DoRegister(repository: locator<RegisterRepository>()));
 
   //providers
   locator.registerFactory(
     () => SplashProvider(getCurrency: locator<GetCurrency>()),
   );
   locator.registerFactory<LoginProvider>(() => LoginProvider(doLogin: locator()));
+  locator.registerFactory<RegisterProvider>(() => RegisterProvider(doRegister: locator()));
 }

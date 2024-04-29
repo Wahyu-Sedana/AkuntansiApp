@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:akuntansi_client/core/utils/colors.dart';
 import 'package:akuntansi_client/features/login/presentation/pages/login_page.dart';
 import 'package:akuntansi_client/features/splash/presentation/providers/splash_provider.dart';
 import 'package:flutter/material.dart';
@@ -37,12 +38,12 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: primaryColor,
       body: Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('My Akuntan', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          Text('My Akuntan', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
           SizedBox(height: 10),
           CircularProgressIndicator()
         ],

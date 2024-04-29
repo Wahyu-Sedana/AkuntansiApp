@@ -16,13 +16,18 @@ class LoginDataSourceImplementation implements LoginDataSource {
   @override
   Future<LoginDataModel?> doLogin(String email, String password) async {
     String url = 'login';
-    FormData data = FormData.fromMap({'email': email, 'password': password});
+    // FormData data = FormData.fromMap({'email': email, 'password': password});
+    Map<String, dynamic> data = {'email': email, 'password': password};
 
     try {
       final response = await dio.post(
         url,
         data: data,
+        options: Options(
+          contentType: Headers.jsonContentType,
+        ),
       );
+      print(response.data);
       final model = LoginResponseModel.fromJson(response.data);
       final session = locator<Session>();
       if (model.data != null) {
