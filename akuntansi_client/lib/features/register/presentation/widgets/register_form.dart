@@ -117,7 +117,28 @@ class _RegisterFormState extends State<RegisterForm> {
                       );
                     }
                   },
-                  bgColor: primaryDarkColor)
+                  bgColor: primaryDarkColor),
+              largeVerticalSpacing(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        LoginPage.routeName,
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 20.0),
+                      child: Text(
+                        "Have an account? Sign In!",
+                        style: forgotPasStyle,
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ],
           ),
         ),

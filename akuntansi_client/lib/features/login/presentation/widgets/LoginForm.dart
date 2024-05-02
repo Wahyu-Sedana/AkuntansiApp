@@ -1,3 +1,4 @@
+import 'package:akuntansi_client/features/register/presentation/pages/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -111,7 +112,28 @@ class _LoginFormState extends State<LoginForm> {
                       submit();
                     }
                   },
-                  bgColor: primaryDarkColor)
+                  bgColor: primaryDarkColor),
+              largeVerticalSpacing(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        RegisterPage.routeName,
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 20.0),
+                      child: Text(
+                        "Don't have an acoount? Sign Up!",
+                        style: forgotPasStyle,
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ],
           ),
         ),

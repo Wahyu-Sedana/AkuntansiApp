@@ -8,6 +8,10 @@ import 'package:akuntansi_client/features/splash/presentation/providers/splash_p
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'features/dashboard/presentation/pages/dashboard_page.dart';
+import 'features/history/presentation/pages/history_page.dart';
+import 'features/profile/presentation/pages/profile_page.dart';
+
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
@@ -27,7 +31,10 @@ class MainApp extends StatelessWidget {
           '/login': (context) => const LoginPage(),
           '/register': (context) => const RegisterPage(),
           '/home': (context) => const HomePage(),
-          '/forgot-password': (context) => const ForgotPasswordPage()
+          '/forgotPassword': (context) => const ForgotPasswordPage(),
+          '/profile': (context) => const ProfilePage(),
+          '/dashboard': (context) => const DashboardPage(),
+          '/history': (context) => const HistoryPage(),
         },
       ),
     );

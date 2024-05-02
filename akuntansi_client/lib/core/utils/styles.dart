@@ -22,7 +22,7 @@ TextStyle paymentLabelStyle =
     const TextStyle(fontSize: 16.0, color: Colors.black, fontWeight: FontWeight.bold);
 
 TextStyle txtButtonStyle =
-    const TextStyle(fontSize: 18.0, color: Colors.black, fontWeight: FontWeight.bold);
+    const TextStyle(fontSize: 18.0, color: primaryColor, fontWeight: FontWeight.bold);
 TextStyle txtButtonCancelStyle =
     const TextStyle(fontSize: 18.0, color: Colors.black, fontWeight: FontWeight.bold);
 TextStyle txtButtonProfileStyle =
@@ -44,7 +44,7 @@ TextStyle whiteAccentStyle = const TextStyle(fontSize: 12, color: whiteAccentCol
 TextStyle forgotPasStyle = const TextStyle(fontSize: 12, color: Colors.black);
 
 TextStyle titleStyle =
-    const TextStyle(fontSize: fontExtraLarge, color: Colors.black, fontWeight: FontWeight.bold);
+    const TextStyle(fontSize: fontExtraLarge, color: primaryDarkColor, fontWeight: FontWeight.bold);
 
 TextStyle appBarStyle(Color? textColor) =>
     TextStyle(fontSize: 16.0, color: textColor ?? Colors.black);
