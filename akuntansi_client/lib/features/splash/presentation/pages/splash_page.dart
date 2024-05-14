@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/presentation/providers/currency_state.dart';
+import '../../../../core/utils/utility.dart';
+import '../../../home/presentation/pages/home_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -27,7 +29,12 @@ class _SplashPageState extends State<SplashPage> {
             case CurrencyLoading:
               break;
             case CurrencyLoaded:
-              Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route) => false);
+              final isLoggedIn = await checkUserSession();
+              if (isLoggedIn) {
+                Navigator.pushNamedAndRemoveUntil(context, HomePage.routeName, (route) => false);
+              } else {
+                Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route) => false);
+              }
               break;
           }
         });

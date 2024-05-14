@@ -3,3 +3,5 @@ enum TypeField {
   password,
   username,
 }
+
+enum dialogStyle { style1, style2 }

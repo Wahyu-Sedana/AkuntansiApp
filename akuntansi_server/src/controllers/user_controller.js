@@ -14,8 +14,8 @@ const loginUser = async (req, res) => {
                 data: result
             });
         } else {
-            return res.status(401).json({
-                message: 'Login failed',
+            return res.status(404).json({
+                message: 'Email belum terdaftar',
                 success: false
             });
         }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'enums.dart';
-import 'helper.dart';
 
 class ValidationHelper {
   final Function(bool value) isError;

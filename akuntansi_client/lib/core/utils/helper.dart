@@ -3,8 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get_it/get_it.dart';
-
 import 'dimens.dart';
 import 'injection.dart';
 
@@ -17,7 +15,7 @@ logMe(Object? obj) {
   }
 }
 
-showLoading() {
+void showLoading() {
   SmartDialog.showLoading(
     backDismiss: false,
     builder: (context) =>
@@ -25,7 +23,7 @@ showLoading() {
   );
 }
 
-dismissLoading() {
+void dismissLoading() {
   SmartDialog.dismiss();
 }
 

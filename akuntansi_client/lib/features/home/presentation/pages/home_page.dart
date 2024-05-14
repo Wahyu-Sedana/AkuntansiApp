@@ -19,6 +19,7 @@ class HomePage extends StatelessWidget {
               bottomNavigationBar: BottomNavigationBar(
                 currentIndex: provider.currentIndex,
                 selectedItemColor: primaryDarkColor,
+                showUnselectedLabels: false,
                 onTap: (index) {
                   provider.changePage(index);
                 },
