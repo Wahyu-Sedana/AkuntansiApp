@@ -17,11 +17,11 @@ class ProfilePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               'Profile Page',
               style: TextStyle(fontSize: 20),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 showDialog(
@@ -34,7 +34,7 @@ class ProfilePage extends StatelessWidget {
                   ),
                 );
               },
-              child: Text('Logout'),
+              child: const Text('Logout'),
             ),
           ],
         ),

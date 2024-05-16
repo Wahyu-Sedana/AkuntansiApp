@@ -1,4 +1,6 @@
 import 'package:akuntansi_client/core/utils/session.dart';
+import 'package:akuntansi_client/features/dashboard/presentation/providers/dashboard_provider.dart';
+import 'package:akuntansi_client/features/dashboard/presentation/providers/transaction_provider.dart';
 import 'package:akuntansi_client/features/home/presentation/providers/home_provider.dart';
 import 'package:akuntansi_client/features/register/data/datasources/register_datasource.dart';
 import 'package:akuntansi_client/features/register/data/repositories/register_repository_implementation.dart';
@@ -74,6 +76,8 @@ Future<void> init() async {
       () => DoRegister(repository: locator<RegisterRepository>()));
 
   //providers
+  locator.registerFactory<DashboardProvider>(() => DashboardProvider());
+  locator.registerFactory<TransactionProvider>(() => TransactionProvider());
   locator.registerFactory(
     () => SplashProvider(getCurrency: locator<GetCurrency>()),
   );

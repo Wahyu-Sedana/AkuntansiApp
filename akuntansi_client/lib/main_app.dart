@@ -1,4 +1,6 @@
 import 'package:akuntansi_client/core/utils/injection.dart';
+import 'package:akuntansi_client/features/dashboard/presentation/providers/dashboard_provider.dart';
+import 'package:akuntansi_client/features/dashboard/presentation/providers/transaction_provider.dart';
 import 'package:akuntansi_client/features/forgotPassword/presentation/pages/forgot_password_page.dart';
 import 'package:akuntansi_client/features/home/presentation/pages/home_page.dart';
 import 'package:akuntansi_client/features/login/presentation/pages/login_page.dart';
@@ -22,6 +24,11 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider<SplashProvider>(
           create: (context) => locator<SplashProvider>(),
         ),
+        ChangeNotifierProvider<DashboardProvider>(
+          create: (context) => locator<DashboardProvider>(),
+        ),
+        ChangeNotifierProvider<TransactionProvider>(
+            create: (context) => locator<TransactionProvider>())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
