@@ -43,7 +43,7 @@ class DashboardPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        session.userName,
+                        session.namaUsaha,
                         style: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -51,7 +51,7 @@ class DashboardPage extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'Selamat datang ${session.userName}!',
+                        'Selamat datang ${session.namaUsaha}!',
                         style: const TextStyle(
                           color: Colors.black,
                           fontSize: 10,
@@ -71,8 +71,8 @@ class DashboardPage extends StatelessWidget {
         ),
         body: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.all(10),
-            child: Column(
+            padding: const EdgeInsets.all(10),
+            child: const Column(
               children: [
                 CardPaymentWidget(),
                 SizedBox(height: 20),

@@ -12,12 +12,13 @@ class RegisterProvider extends FormProvider {
 
   Stream<RegisterState> doRegisterApi(
       {required BuildContext ctx,
-      required String username,
+      required String namaUsaha,
+      required String alamat,
       required String email,
       required String password}) async* {
     yield RegisterLoading();
 
-    final result = await doRegister.call(username, email, password);
+    final result = await doRegister.call(namaUsaha, alamat, email, password);
     yield* result.fold((statusCode) async* {
       yield RegisterFailure(failure: statusCode.message);
     }, (result) async* {

@@ -28,7 +28,7 @@ class MainApp extends StatelessWidget {
           create: (context) => locator<DashboardProvider>(),
         ),
         ChangeNotifierProvider<TransactionProvider>(
-            create: (context) => locator<TransactionProvider>())
+            create: (context) => locator<TransactionProvider>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

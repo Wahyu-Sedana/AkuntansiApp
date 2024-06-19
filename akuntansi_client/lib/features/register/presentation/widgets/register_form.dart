@@ -1,3 +1,4 @@
+import 'package:akuntansi_client/core/presentation/providers/form_provider.dart';
 import 'package:akuntansi_client/features/login/presentation/pages/login_page.dart';
 import 'package:akuntansi_client/features/register/presentation/providers/register_provider.dart';
 import 'package:flutter/material.dart';
@@ -21,14 +22,11 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
-  void submit(
-    String username,
-    String email,
-    String password,
-  ) {
+  void submit(String namaUsaha, String alamat, String email, String password) {
     final provider = context.read<RegisterProvider>();
     provider
-        .doRegisterApi(ctx: context, username: username, email: email, password: password)
+        .doRegisterApi(
+            ctx: context, namaUsaha: namaUsaha, alamat: alamat, email: email, password: password)
         .listen((state) async {
       switch (state.runtimeType) {
         case RegisterLoading:
@@ -36,23 +34,20 @@ class _RegisterFormState extends State<RegisterForm> {
           break;
         case RegisterFailure:
           final msg = (state as RegisterFailure).failure;
-          dismissLoading();
           showToast(message: msg);
+          dismissLoading();
           break;
         case RegisterSuccess:
           final data = (state as RegisterSuccess).data;
-          dismissLoading();
-          if (data!.success == true) {
+          if (data!.status == 200) {
             showToast(message: "Register Successful");
             Navigator.pushReplacementNamed(context, LoginPage.routeName);
+          } else if (data.status == 409) {
+            showToast(message: "email already registered");
           } else {
-            if (data.message.toString().contains("email")) {
-              showToast(message: "email already registered");
-            } else {
-              showToast(message: "Register Failed");
-            }
+            showToast(message: "Register Failed");
           }
-
+          dismissLoading();
           break;
       }
     });
@@ -70,13 +65,24 @@ class _RegisterFormState extends State<RegisterForm> {
           child: Column(
             children: [
               CustomTextField(
-                title: "Username",
-                controller: provider.usernameController,
+                title: "Nama Usaha",
+                controller: provider.namaUsahaController,
                 inputType: TextInputType.name,
-                isError: provider.usernameError,
+                isError: provider.namaUsahaError,
                 fieldValidator: ValidationHelper(
-                  isError: (bool value) => provider.setUsernameError = value,
-                  typeField: TypeField.username,
+                  isError: (bool value) => provider.setnamaUsahaError = value,
+                  typeField: TypeField.namaUsaha,
+                ).validate(),
+              ),
+              mediumVerticalSpacing(),
+              CustomTextField(
+                title: "Alamat",
+                controller: provider.alamatController,
+                inputType: TextInputType.streetAddress,
+                isError: provider.alamatError,
+                fieldValidator: ValidationHelper(
+                  isError: (bool value) => provider.setAlamatError = value,
+                  typeField: TypeField.alamat,
                 ).validate(),
               ),
               mediumVerticalSpacing(),
@@ -111,7 +117,8 @@ class _RegisterFormState extends State<RegisterForm> {
                   event: () async {
                     if (provider.formKey.currentState!.validate()) {
                       submit(
-                        provider.usernameController.text,
+                        provider.namaUsahaController.text,
+                        provider.alamatController.text,
                         provider.emailController.text,
                         provider.passwordController.text,
                       );

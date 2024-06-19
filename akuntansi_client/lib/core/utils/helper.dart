@@ -40,3 +40,12 @@ Future<void> sessionLogOut() async {
   final session = locator<Session>();
   await session.clearSession();
 }
+
+String mergePriceTxt(String price) {
+  final session = locator<Session>();
+  String currency = session.currency;
+  String result;
+  result = '$currency$price ';
+
+  return result;
+}

@@ -7,7 +7,7 @@ import '../repositories/register_repository.dart';
 
 abstract class RegisterUseCase<Type> {
   Future<Either<Failure, RegisterResponseModel>> call(
-      String username, String email, String password);
+      String namaUsaha, String alamat, String email, String password);
 }
 
 class DoRegister implements RegisterUseCase<String> {
@@ -17,8 +17,8 @@ class DoRegister implements RegisterUseCase<String> {
 
   @override
   Future<Either<Failure, RegisterResponseModel>> call(
-      String username, String email, String password) async {
-    final result = await repository.doRegister(username, email, password);
+      String namaUsaha, String alamat, String email, String password) async {
+    final result = await repository.doRegister(namaUsaha, alamat, email, password);
     return result.fold((l) => Left(l), (r) {
       return Right(r);
     });

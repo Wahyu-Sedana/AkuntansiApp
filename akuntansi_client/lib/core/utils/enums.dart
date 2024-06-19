@@ -1,7 +1,3 @@
-enum TypeField {
-  email,
-  password,
-  username,
-}
+enum TypeField { email, password, namaUsaha, alamat }
 
 enum dialogStyle { style1, style2 }

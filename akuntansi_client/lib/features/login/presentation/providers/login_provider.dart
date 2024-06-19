@@ -21,7 +21,7 @@ class LoginProvider extends FormProvider {
     }, (result) async* {
       if (result != null) {
         yield LoginSuccess(data: result);
-        session.setUserName = result.username;
+        session.setnamaUsaha = result.namaUsaha;
       } else {
         yield LoginFailure(failure: "Login failed");
       }

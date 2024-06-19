@@ -3,7 +3,8 @@ import 'package:dio/dio.dart';
 import '../models/register_reponse.dart';
 
 abstract class RegisterDataSource {
-  Future<RegisterResponseModel> doRegister(String username, String email, String password);
+  Future<RegisterResponseModel> doRegister(
+      String namaUsaha, String alamat, String email, String password);
 }
 
 class RegisterDataSourceImplementation implements RegisterDataSource {
@@ -12,10 +13,16 @@ class RegisterDataSourceImplementation implements RegisterDataSource {
   RegisterDataSourceImplementation({required this.dio});
 
   @override
-  Future<RegisterResponseModel> doRegister(String username, String email, String password) async {
+  Future<RegisterResponseModel> doRegister(
+      String namaUsaha, String alamat, String email, String password) async {
     String url = 'register';
 
-    Map<String, dynamic> data = {'username': username, 'email': email, 'password': password};
+    Map<String, dynamic> data = {
+      'namaUsaha': namaUsaha,
+      'alamat': alamat,
+      'email': email,
+      'password': password
+    };
 
     try {
       final response = await dio.post(

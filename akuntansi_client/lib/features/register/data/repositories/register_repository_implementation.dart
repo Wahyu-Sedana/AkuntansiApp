@@ -15,13 +15,13 @@ class RegistrationRepostitoryImplementation implements RegisterRepository {
 
   @override
   Future<Either<Failure, RegisterResponseModel>> doRegister(
-      String username, String email, String password) async {
+      String namaUsaha, String alamat, String email, String password) async {
     if (!await networkInfo.isConnected) {
       return const Left(
           ConnectionFailure(message: "Connected to network not connected to the server"));
     }
     try {
-      final data = await dataSource.doRegister(username, email, password);
+      final data = await dataSource.doRegister(namaUsaha, alamat, email, password);
       return Right(data);
     } on DioError catch (e) {
       logMe("Failure Register repository ${e.toString()}");

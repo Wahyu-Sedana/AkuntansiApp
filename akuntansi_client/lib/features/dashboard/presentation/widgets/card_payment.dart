@@ -1,3 +1,4 @@
+import 'package:akuntansi_client/core/utils/helper.dart';
 import 'package:akuntansi_client/features/dashboard/presentation/providers/dashboard_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,7 @@ class CardPaymentWidget extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       'Total Saldo',
                       style: TextStyle(
                         color: Colors.white,
@@ -44,7 +45,7 @@ class CardPaymentWidget extends StatelessWidget {
                 SizedBox(height: 10),
                 Text(
                   saldoProvider.isSaldoVisible
-                      ? 'Rp ${saldoProvider.totalSaldo.toStringAsFixed(2)}'
+                      ? mergePriceTxt(saldoProvider.totalSaldo.toStringAsFixed(2))
                       : '****',
                   style: TextStyle(
                     color: Colors.white,
@@ -68,7 +69,7 @@ class CardPaymentWidget extends StatelessWidget {
                         ),
                         SizedBox(height: 5),
                         Text(
-                          'Rp ${saldoProvider.totalPemasukan.toStringAsFixed(2)}',
+                          mergePriceTxt(saldoProvider.totalPemasukan.toStringAsFixed(2)),
                           style: TextStyle(
                             color: Colors.greenAccent,
                             fontSize: 20,
@@ -89,7 +90,7 @@ class CardPaymentWidget extends StatelessWidget {
                         ),
                         SizedBox(height: 5),
                         Text(
-                          'Rp ${saldoProvider.totalPengeluaran.toStringAsFixed(2)}',
+                          mergePriceTxt(saldoProvider.totalPengeluaran.toStringAsFixed(2)),
                           style: TextStyle(
                             color: Colors.redAccent,
                             fontSize: 20,
