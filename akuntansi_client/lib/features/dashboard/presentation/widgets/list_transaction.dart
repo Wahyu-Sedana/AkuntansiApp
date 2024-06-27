@@ -1,58 +1,41 @@
-import 'package:akuntansi_client/core/utils/helper.dart';
-import 'package:akuntansi_client/features/dashboard/data/models/transaction.dart';
 import 'package:akuntansi_client/features/dashboard/presentation/providers/transaction_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'transaction_item.dart';
 
 class TransactionListWidget extends StatelessWidget {
-  final bool isPemasukan;
-
-  const TransactionListWidget({required this.isPemasukan, Key? key}) : super(key: key);
+  const TransactionListWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Consumer<TransactionProvider>(
-      builder: (context, saldoProvider, child) {
-        List<TransactionModel> transactions =
-            isPemasukan ? saldoProvider.pemasukanList : saldoProvider.pengeluaranList;
+      builder: (context, transactionProvider, child) {
+        if (transactionProvider.isMakeRequest == true) {
+          transactionProvider.getTransactions();
+          return const Center(child: CircularProgressIndicator());
+        }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Text(
-                isPemasukan ? 'Daftar Pemasukan' : 'Daftar Pengeluaran',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+        final _data = transactionProvider.dataTransaction;
+
+        if (_data == null || _data.isEmpty) {
+          return const Center(
+            child: Text(
+              'Tidak ada aktivitas!',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: transactions.length,
-              itemBuilder: (context, index) {
-                TransactionModel transaction = transactions[index];
-                return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Card(
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    child: ListTile(
-                      title: Text(transaction.description),
-                      trailing: Text(
-                        mergePriceTxt(transaction.amount.toStringAsFixed(2)),
-                        style: TextStyle(
-                          color: isPemasukan ? Colors.green : Colors.red,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
+          );
+        }
+
+        return ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: _data.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: TransactionItem(data: _data[index]),
+            );
+          },
         );
       },
     );

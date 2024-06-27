@@ -16,28 +16,38 @@ class HomePage extends StatelessWidget {
           builder: (context, provider, _) {
             return Scaffold(
               body: provider.currentPage,
-              bottomNavigationBar: BottomNavigationBar(
-                currentIndex: provider.currentIndex,
-                selectedItemColor: primaryDarkColor,
-                showUnselectedLabels: false,
-                onTap: (index) {
-                  provider.changePage(index);
-                },
-                items: const [
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.home),
-                    label: "Home",
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.history),
-                    label: "History",
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.person),
-                    label: "Profile",
-                  ),
-                ],
+              bottomNavigationBar: BottomAppBar(
+                shape: const CircularNotchedRectangle(),
+                notchMargin: 6.0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    IconButton(
+                      icon: const Icon(Icons.home),
+                      color: provider.currentIndex == 0 ? primaryDarkColor : Colors.grey,
+                      onPressed: () {
+                        provider.changePage(0);
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.person),
+                      color: provider.currentIndex == 1 ? primaryDarkColor : Colors.grey,
+                      onPressed: () {
+                        provider.changePage(1);
+                      },
+                    ),
+                  ],
+                ),
               ),
+              floatingActionButton: FloatingActionButton(
+                backgroundColor: primaryDarkColor,
+                onPressed: () {
+                  provider.changePage(1);
+                },
+                tooltip: 'Add',
+                child: const Icon(Icons.add),
+              ),
+              floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
             );
           },
         ));

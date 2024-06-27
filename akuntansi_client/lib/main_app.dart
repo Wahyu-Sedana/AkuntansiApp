@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'features/dashboard/presentation/pages/dashboard_page.dart';
-import 'features/history/presentation/pages/history_page.dart';
 import 'features/profile/presentation/pages/profile_page.dart';
 
 class MainApp extends StatelessWidget {
@@ -41,7 +40,6 @@ class MainApp extends StatelessWidget {
           '/forgotPassword': (context) => const ForgotPasswordPage(),
           '/profile': (context) => const ProfilePage(),
           '/dashboard': (context) => const DashboardPage(),
-          '/history': (context) => const HistoryPage(),
         },
       ),
     );

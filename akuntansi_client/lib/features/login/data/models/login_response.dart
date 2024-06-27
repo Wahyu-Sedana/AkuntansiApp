@@ -50,16 +50,16 @@ class LoginDataModel extends Equatable {
   List<Object?> get props => [userId, namaUsaha, alamat, email, password];
 
   factory LoginDataModel.fromJson(Map<String, dynamic> json) => LoginDataModel(
-      userId: json['_id_user'],
-      namaUsaha: json['_nama_usaha'],
-      alamat: json['_alamat'],
-      email: json['_email'],
-      password: json['_password']);
+      userId: json['id_user'],
+      namaUsaha: json['nama_usaha'],
+      alamat: json['alamat'],
+      email: json['email'],
+      password: json['password']);
   Map<String, dynamic> toJson() => {
-        '_id': userId,
-        '_nama_usaha': namaUsaha,
-        '_alamat': alamat,
-        '_email': email,
-        '_password': password
+        'id_user': userId,
+        'nama_usaha': namaUsaha,
+        'alamat': alamat,
+        'email': email,
+        'password': password
       };
 }

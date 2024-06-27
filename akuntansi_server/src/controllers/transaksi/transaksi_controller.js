@@ -28,17 +28,30 @@ const getTransaksi = async (req, res) => {
     const { id_user } = req.body;
     try {
         const result = await transactionServices.getTransaksi(id_user);
-        if (result.length > 0) {
+
+        if (result.transaksi.length > 0) {
+            // console.log('====================================');
+            // console.log('ada transaksi');
+            // console.log('====================================');
             return res.status(200).json({
                 success: true,
                 message: 'Berhasil mendapatkan data',
-                data: result,
+                data: result.transaksi,
+                totalPemasukan: result.totalPemasukan,
+                totalPengeluaran: result.totalPengeluaran,
+                totalSaldo: result.totalSaldo,
             });
         } else {
-            return res.status(200).json({
+            // console.log('====================================');
+            // console.log('gaada transaksi');
+            // console.log('====================================');
+            return res.status(400).json({
                 success: true,
                 message: 'Belum ada data',
-                data: result,
+                data: result.transaksi,
+                totalPemasukan: result.totalPemasukan,
+                totalPengeluaran: result.totalPengeluaran,
+                totalSaldo: result.totalSaldo,
             });
         }
     } catch (error) {
@@ -49,6 +62,7 @@ const getTransaksi = async (req, res) => {
         });
     }
 }
+
 
 const updateTransaksi = async (req, res) => {
     const { id_transaksi, id_kategori, jumlah, tanggal, catatan } = req.body;

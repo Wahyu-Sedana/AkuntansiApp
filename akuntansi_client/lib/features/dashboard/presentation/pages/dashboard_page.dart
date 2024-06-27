@@ -10,10 +10,6 @@ class DashboardPage extends StatelessWidget {
   const DashboardPage({Key? key}) : super(key: key);
   static const routeName = "/dashboard";
 
-  get pemasukanList => null;
-
-  get pengeluaranList => null;
-
   @override
   Widget build(BuildContext context) {
     final session = locator<Session>();
@@ -72,12 +68,26 @@ class DashboardPage extends StatelessWidget {
         body: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.all(10),
-            child: const Column(
+            child: Column(
               children: [
-                CardPaymentWidget(),
-                SizedBox(height: 20),
-                TransactionListWidget(isPemasukan: true),
-                TransactionListWidget(isPemasukan: false),
+                const CardPaymentWidget(),
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Activity',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                      ),
+                      Text('See more', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                    ],
+                  ),
+                ),
+                const Center(
+                  child: TransactionListWidget(),
+                ),
               ],
             ),
           ),

@@ -5,12 +5,12 @@ import 'package:dio/dio.dart';
 
 import '../repositories/register_repository.dart';
 
-abstract class RegisterUseCase<Type> {
+abstract class RegisterUseCase {
   Future<Either<Failure, RegisterResponseModel>> call(
       String namaUsaha, String alamat, String email, String password);
 }
 
-class DoRegister implements RegisterUseCase<String> {
+class DoRegister implements RegisterUseCase {
   final RegisterRepository repository;
 
   DoRegister({required this.repository});

@@ -2,8 +2,8 @@ import connection from '../helper/database.js';
 
 const addTransaksi = async (transaksi) => {
     const query = `INSERT INTO transaksi_ (_id_kategori, _jumlah, _catatan, _tanggal)
-                   VALUES(:id_kategori, :jumlah, :catatan, :tanggal)`;
-    const [result] = await connection.query(query, transaksi);
+                   VALUES(?, ?, ?, ?)`;
+    const [result] = await connection.query(query, [transaksi]);
     return result;
 }
 
@@ -13,10 +13,34 @@ const getTransaksi = async (userId) => {
                           DATE_FORMAT(t._tanggal, '%d-%m-%Y') as tanggal, DATE_FORMAT(t._waktu_insert, 
                           '%d-%m-%Y %H:%I:%s') as waktu_input 
                    FROM transaksi_ t INNER JOIN kategori_ k ON t._id_kategori=k._id_kategori 
-                   WHERE k._id_user= :id_user`;
-    const [result] = await connection.query(query, { id_user: userId });
-    return result;
+                   WHERE k._id_user= ?`;
+    const [result] = await connection.query(query, [userId]);
+
+    let totalPemasukan = 0;
+    let totalPengeluaran = 0;
+    let totalSaldo = 0;
+
+    result.forEach(transaksi => {
+        if (transaksi.id_jenis === 1) { 
+            totalPemasukan += transaksi.jumlah;
+        } else if (transaksi.id_jenis === 2) {
+            totalPengeluaran += transaksi.jumlah;
+        }
+    });
+    totalSaldo = totalPemasukan - totalPengeluaran;
+
+    if(totalSaldo < 0) {
+        totalSaldo = 0;
+    }
+
+    return {
+        transaksi: result,
+        totalPemasukan,
+        totalPengeluaran,
+        totalSaldo
+    };
 }
+
 
 const updateTransaksi = async (transaksi) => {
     const query = `UPDATE transaksi_ SET _id_kategori= :id_kategori, _jumlah= :jumlah, _tanggal= :tanggal,
@@ -26,8 +50,8 @@ const updateTransaksi = async (transaksi) => {
 }
 
 const deleteTransaksi = async (transaksiId) => {
-    const query = `DELETE FROM transaksi_ WHERE _id_transaksi= :id_transaksi`;
-    const [result] = await connection.query(query, { id_transaksi: transaksiId });
+    const query = `DELETE FROM transaksi_ WHERE _id_transaksi= ?`;
+    const [result] = await connection.query(query, [transaksiId]);
     return result;
 }
 

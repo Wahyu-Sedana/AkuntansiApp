@@ -1,7 +1,7 @@
 import connection from '../helper/database.js';
 
 const login = async (user) => {
-    const [result] = await connection.query('SELECT * FROM user_ WHERE _email=? AND _password=?', [user.email, user.password]);
+    const [result] = await connection.query('SELECT _id_user AS id_user, _nama_usaha AS nama_usaha, _alamat AS alamat, _email AS email, _password AS password, _tgl_register AS tgl_register FROM user_ WHERE _email=? AND _password=?', [user.email, user.password]);
     return result;
 }
 

@@ -1,5 +1,8 @@
 import 'package:akuntansi_client/core/presentation/providers/form_provider.dart';
 import 'package:akuntansi_client/core/utils/session.dart';
+import 'package:akuntansi_client/features/dashboard/data/datasources/transaction_datasource.dart';
+import 'package:akuntansi_client/features/dashboard/data/repositories/transaction_repository.dart';
+import 'package:akuntansi_client/features/dashboard/domain/usecases/transaction_usecase.dart';
 import 'package:akuntansi_client/features/dashboard/presentation/providers/dashboard_provider.dart';
 import 'package:akuntansi_client/features/dashboard/presentation/providers/transaction_provider.dart';
 import 'package:akuntansi_client/features/home/presentation/providers/home_provider.dart';
@@ -61,6 +64,9 @@ Future<void> init() async {
       networkInfo: locator<NetworkInfo>(),
     ),
   );
+  locator.registerLazySingleton<TransactionRepository>(() => TransactionRepositoryImplementation(
+      getTransactionDataSource: locator<TransactionDataSource>(),
+      networkInfo: locator<NetworkInfo>()));
 
   //datasource
   locator.registerLazySingleton<LoginDataSource>(
@@ -69,16 +75,21 @@ Future<void> init() async {
       () => CurrencyDataSourceImplementation(dio: locator<Dio>()));
   locator.registerLazySingleton<RegisterDataSource>(
       () => RegisterDataSourceImplementation(dio: locator<Dio>()));
+  locator.registerLazySingleton<TransactionDataSource>(
+      () => TransactionDataSourceImplementation(dio: locator<Dio>()));
 
   //usecase
   locator.registerLazySingleton<DoLogin>(() => DoLogin(repository: locator<LoginRepository>()));
   locator.registerLazySingleton<GetCurrency>(() => GetCurrency(locator<CurrencyRepository>()));
   locator.registerLazySingleton<DoRegister>(
       () => DoRegister(repository: locator<RegisterRepository>()));
+  locator.registerLazySingleton<TransactionUseCaseImplementation>(() =>
+      TransactionUseCaseImplementation(transactionRepository: locator<TransactionRepository>()));
 
   //providers
   locator.registerFactory<DashboardProvider>(() => DashboardProvider());
-  locator.registerFactory<TransactionProvider>(() => TransactionProvider());
+  locator.registerFactory<TransactionProvider>(() => TransactionProvider(
+      transactionUseCaseImplementation: locator<TransactionUseCaseImplementation>()));
   locator.registerFactory(
     () => SplashProvider(getCurrency: locator<GetCurrency>()),
   );

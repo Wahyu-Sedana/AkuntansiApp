@@ -1,12 +1,11 @@
 import 'package:akuntansi_client/features/dashboard/presentation/pages/dashboard_page.dart';
-import 'package:akuntansi_client/features/history/presentation/pages/history_page.dart';
 import 'package:akuntansi_client/features/profile/presentation/pages/profile_page.dart';
 import 'package:flutter/material.dart';
 
 class HomeProvider with ChangeNotifier {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [const DashboardPage(), const HistoryPage(), const ProfilePage()];
+  final List<Widget> _pages = [const DashboardPage(), const ProfilePage()];
 
   int get currentIndex => _currentIndex;
 

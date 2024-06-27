@@ -11,7 +11,7 @@ router.post('/register', user_controller.registerUser);
 
 router.get('/currency', currency_controller.currency);
 
-router.get('/transaction', transaction_controller.getTransaksi);
+router.post('/transaction', transaction_controller.getTransaksi);
 router.post('/transaction', transaction_controller.addTransaksi);
 router.post('/transaction', transaction_controller.updateTransaksi);
 router.post('/transaction', transaction_controller.deleteTransaksi);
