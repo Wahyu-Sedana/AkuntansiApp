@@ -66,6 +66,7 @@ class DashboardPage extends StatelessWidget {
           ),
         ),
         body: SingleChildScrollView(
+          physics: const NeverScrollableScrollPhysics(),
           child: Container(
             padding: const EdgeInsets.all(10),
             child: Column(
