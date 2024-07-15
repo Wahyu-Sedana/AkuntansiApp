@@ -9,7 +9,8 @@ abstract class TransactionUseCase {
   Future<Either<Failure, List<TransactionModel>>> call(int userId);
   Future<Either<Failure, TransactionResponseModel>> callSaldo(int userId);
   Future<Either<Failure, KategoriResponseModel>> callKategori(int userId);
-  Future<Either<Failure, TransactionResponseModel>> callAddTransaction(FormData formData);
+  Future<Either<Failure, TransactionResponseModel>> callAddTransaction(
+      int idKategori, int jumlah, String tanggal, String catatan);
 }
 
 class TransactionUseCaseImplementation implements TransactionUseCase {
@@ -34,8 +35,9 @@ class TransactionUseCaseImplementation implements TransactionUseCase {
   }
 
   @override
-  Future<Either<Failure, TransactionResponseModel>> callAddTransaction(FormData formData) async {
-    final result = await transactionRepository.addTransaction(formData);
+  Future<Either<Failure, TransactionResponseModel>> callAddTransaction(
+      int idKategori, int jumlah, String tanggal, String catatan) async {
+    final result = await transactionRepository.addTransaction(idKategori, jumlah, tanggal, catatan);
     return result.fold((l) => Left(l), (r) {
       return Right(r);
     });

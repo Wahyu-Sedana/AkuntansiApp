@@ -1,7 +1,6 @@
 import 'package:akuntansi_client/core/error/failure.dart';
 import 'package:akuntansi_client/features/register/data/models/register_reponse.dart';
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
 
 import '../repositories/register_repository.dart';
 

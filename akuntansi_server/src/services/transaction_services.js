@@ -2,7 +2,7 @@ import connection from '../helper/database.js';
 
 const addTransaksi = async (transaksi) => {
     const query = `INSERT INTO transaksi_ (_id_kategori, _jumlah, _catatan, _tanggal)
-                   VALUES(?, ?, ?, ?)`;
+                   VALUES('${transaksi.id_kategori}', '${transaksi.jumlah}', '${transaksi.catatan}', '${transaksi.tanggal}')`;
     const [result] = await connection.query(query, [transaksi]);
     return result;
 }
@@ -13,7 +13,7 @@ const getTransaksi = async (userId) => {
                           DATE_FORMAT(t._tanggal, '%d-%m-%Y') as tanggal, DATE_FORMAT(t._waktu_insert, 
                           '%d-%m-%Y %H:%I:%s') as waktu_input 
                    FROM transaksi_ t INNER JOIN kategori_ k ON t._id_kategori=k._id_kategori 
-                   WHERE k._id_user= ?`;
+                   WHERE k._id_user= ? ORDER BY t._id_transaksi DESC`;
     const [result] = await connection.query(query, [userId]);
 
     let totalPemasukan = 0;

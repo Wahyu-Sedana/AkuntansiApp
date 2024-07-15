@@ -16,6 +16,7 @@ class CustomTextField extends StatefulWidget {
   final Function? onTap;
   final String? suffixText;
   final Widget? suffixWidget;
+  final Widget? prefixWidget;
   final bool border;
   final Function? onChanged;
   final bool enabled;
@@ -26,29 +27,30 @@ class CustomTextField extends StatefulWidget {
   final int maxLine;
   final Color backgroundColor;
 
-  const CustomTextField(
-      {Key? key,
-      this.placeholder = '',
-      this.title,
-      this.isSecure = false,
-      this.isError = false,
-      required this.controller,
-      required this.fieldValidator,
-      this.inputType = TextInputType.text,
-      this.refresh = false,
-      this.onTap,
-      this.suffixText,
-      this.border = false,
-      this.onChanged,
-      this.enabled = true,
-      this.inputFormatters,
-      this.enablePadding = false,
-      this.isRounded = false,
-      this.maxLine = 1,
-      this.backgroundColor = Colors.white,
-      this.padding = const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-      this.suffixWidget})
-      : super(key: key);
+  const CustomTextField({
+    Key? key,
+    this.placeholder = '',
+    this.title,
+    this.isSecure = false,
+    this.isError = false,
+    required this.controller,
+    required this.fieldValidator,
+    this.inputType = TextInputType.text,
+    this.refresh = false,
+    this.onTap,
+    this.suffixText,
+    this.border = false,
+    this.onChanged,
+    this.enabled = true,
+    this.inputFormatters,
+    this.enablePadding = false,
+    this.isRounded = false,
+    this.maxLine = 1,
+    this.backgroundColor = Colors.white,
+    this.padding = const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+    this.suffixWidget,
+    this.prefixWidget,
+  }) : super(key: key);
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -58,18 +60,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
   late bool _passwordVisible;
 
   late OutlineInputBorder normalBorder;
-
   late OutlineInputBorder errorBorder;
-
   late OutlineInputBorder roundErrorBorder;
-
   late OutlineInputBorder roundBorder;
 
   @override
   void initState() {
     _passwordVisible = widget.isSecure;
-    normalBorder = OutlineInputBorder(
-      borderRadius: const BorderRadius.all(
+    normalBorder = const OutlineInputBorder(
+      borderRadius: BorderRadius.all(
         Radius.circular(5.0),
       ),
     );
@@ -103,17 +102,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Title section
-        widget.title != null
-            ? Text(
-                widget.title ?? "",
-                style: formLabelStyle,
-                maxLines: 1,
-              )
-            : const SizedBox.shrink(),
+        if (widget.title != null)
+          Text(
+            widget.title ?? "",
+            style: formLabelStyle,
+            maxLines: 1,
+          ),
         const SizedBox(height: 4.0),
-
-        // Input field section
         TextFormField(
           maxLines: widget.maxLine,
           inputFormatters: widget.inputFormatters,
@@ -131,7 +126,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
           keyboardType: widget.inputType,
           style: formTextFieldStyle,
           decoration: InputDecoration(
-            focusColor: Colors.black,
             hintText: widget.placeholder,
             border: InputBorder.none,
             enabledBorder: widget.isRounded ? roundBorder : normalBorder,
@@ -142,6 +136,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
             filled: true,
             fillColor: widget.isError ? Colors.white : widget.backgroundColor,
             contentPadding: widget.padding,
+            prefixIcon: widget.prefixWidget != null
+                ? Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: widget.prefixWidget,
+                  )
+                : null,
             suffixIcon: widget.isSecure
                 ? Material(
                     color: Colors.transparent,

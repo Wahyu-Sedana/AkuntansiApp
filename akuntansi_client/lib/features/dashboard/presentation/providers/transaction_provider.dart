@@ -2,6 +2,7 @@ import 'package:akuntansi_client/core/utils/injection.dart';
 import 'package:akuntansi_client/core/utils/session.dart';
 import 'package:akuntansi_client/features/dashboard/data/models/kategori_models.dart';
 import 'package:akuntansi_client/features/dashboard/domain/usecases/transaction_usecase.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/helper.dart';
@@ -14,6 +15,7 @@ class TransactionProvider with ChangeNotifier {
 
   List<TransactionModel>? _dataTransactions;
   List<Kategori>? _dataKategori;
+  Kategori? _selectedKategori;
   bool _isSaldoVisible = false;
   bool _isMakeRequest = true;
   bool _isMakeRequestKategori = true;
@@ -24,7 +26,6 @@ class TransactionProvider with ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  final TextEditingController _dataKategoriController = TextEditingController();
   final TextEditingController _dataJumlahController = TextEditingController();
   final TextEditingController _dataCatatanController = TextEditingController();
   final TextEditingController _dataTanggalController = TextEditingController();
@@ -93,6 +94,11 @@ class TransactionProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  set setSelectedKategori(val) {
+    _selectedKategori = val;
+    notifyListeners();
+  }
+
   GlobalKey<FormState> get formKey => _formKey;
 
   bool get dataKategoriError => _dataKategoriError;
@@ -100,13 +106,13 @@ class TransactionProvider with ChangeNotifier {
   bool get dataTanggalError => _dataTanggalError;
   bool get dataCatatanError => _dataCatatanError;
 
-  TextEditingController get dataKategoriController => _dataKategoriController;
   TextEditingController get dataJumlahController => _dataJumlahController;
   TextEditingController get dataCatatanController => _dataCatatanController;
   TextEditingController get dataTanggalController => _dataTanggalController;
 
   List<TransactionModel>? get dataTransaction => _dataTransactions;
   List<Kategori>? get dataKategori => _dataKategori;
+  Kategori? get selectedKategori => _selectedKategori;
 
   Future<void> getTransactions() async {
     try {
@@ -163,37 +169,34 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
-  // Future<void> submitTransaction() async {
-  //   try {
-  //     final transaction = TransactionModel(
-  //       kategoriId: int.parse(_dataKategoriController.text),
-  //       jumlah: int.parse(_dataJumlahController.text),
-  //       tanggal: DateTime.parse(_dataTanggalController.text),
-  //       catatan: _dataCatatanController.text,
-  //     );
+  Future<void> submitTransaction() async {
+    print("value dari selected kategori ${_selectedKategori!.idKategori}");
+    try {
+      final result = await transactionUseCaseImplementation.callAddTransaction(
+          _selectedKategori!.idKategori!,
+          int.parse(dataJumlahController.text),
+          dataTanggalController.text,
+          dataCatatanController.text);
+      // print('hasil form data: $formData');
 
-  //     final result = await transactionUseCaseImplementation.addTransaction(transaction);
-
-  //     result.fold(
-  //       (failure) {
-  //         logMe("error");
-  //         print(failure.message);
-  //         logMe(failure);
-  //         throw Exception(failure.message);
-  //       },
-  //       (success) {
-  //         // Handle success, show a message, clear fields, etc.
-  //         clearFields();
-  //         await getTransactions(); // Refresh the transaction list
-  //       },
-  //     );
-  //   } catch (e) {
-  //     logMe(e);
-  //   }
-  // }
+      result.fold(
+        (failure) {
+          logMe("error");
+          print(failure.message);
+          logMe(failure);
+          throw Exception(failure.message);
+        },
+        (success) async {
+          clearFields();
+          await getTransactions();
+        },
+      );
+    } catch (e) {
+      logMe(e);
+    }
+  }
 
   void clearFields() {
-    _dataKategoriController.clear();
     _dataJumlahController.clear();
     _dataTanggalController.clear();
     _dataCatatanController.clear();

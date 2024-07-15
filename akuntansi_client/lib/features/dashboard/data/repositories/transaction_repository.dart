@@ -12,7 +12,8 @@ abstract class TransactionRepository {
   Future<Either<Failure, List<TransactionModel>>> getTransaction(int userId);
   Future<Either<Failure, TransactionResponseModel>> getTotalSaldo(int userId);
   Future<Either<Failure, KategoriResponseModel>> getKategori(int userId);
-  Future<Either<Failure, TransactionResponseModel>> addTransaction(FormData formData);
+  Future<Either<Failure, TransactionResponseModel>> addTransaction(
+      int idKategori, int jumlah, String tanggal, String catatan);
 }
 
 class TransactionRepositoryImplementation implements TransactionRepository {
@@ -55,14 +56,16 @@ class TransactionRepositoryImplementation implements TransactionRepository {
   }
 
   @override
-  Future<Either<Failure, TransactionResponseModel>> addTransaction(FormData formData) async {
+  Future<Either<Failure, TransactionResponseModel>> addTransaction(
+      int idKategori, int jumlah, String tanggal, String catatan) async {
     if (!await networkInfo.isConnected) {
       return const Left(ConnectionFailure(
           message:
               "Koneksi internet tidak stabil. Periksa lingkungan jaringan Anda atau coba mulai ulang aplikasi atau perangkat"));
     }
     try {
-      final data = await getTransactionDataSource.addTransaction(formData);
+      final data =
+          await getTransactionDataSource.addTransaction(idKategori, jumlah, tanggal, catatan);
       return Right(data);
     } on DioError catch (e) {
       logMe("Failure History repository ${e.toString()}");

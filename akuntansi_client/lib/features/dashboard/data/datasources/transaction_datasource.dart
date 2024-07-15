@@ -6,7 +6,8 @@ import 'package:dio/dio.dart';
 abstract class TransactionDataSource {
   Future<List<TransactionModel>> getTransaction(int userId);
   Future<TransactionResponseModel> getTotalSaldo(int userId);
-  Future<TransactionResponseModel> addTransaction(FormData formData);
+  Future<TransactionResponseModel> addTransaction(
+      int idKategori, int jumlah, String tanggal, String catatan);
   Future<KategoriResponseModel> getKategori(int userId);
 }
 
@@ -47,12 +48,19 @@ class TransactionDataSourceImplementation implements TransactionDataSource {
   }
 
   @override
-  Future<TransactionResponseModel> addTransaction(FormData formData) async {
-    String url = 'transaction';
+  Future<TransactionResponseModel> addTransaction(
+      int idKategori, int jumlah, String tanggal, String catatan) async {
+    String url = 'transaction/add';
+    Map<String, dynamic> result = {
+      'id_kategori': idKategori,
+      'jumlah': jumlah,
+      'tanggal': tanggal,
+      'catatan': catatan,
+    };
     try {
       final response = await dio.post(
         url,
-        data: formData,
+        data: result,
       );
       final model = TransactionResponseModel.fromJson(response.data);
       return model;

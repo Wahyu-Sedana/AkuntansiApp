@@ -4,12 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/presentation/widgets/custom_button.dart';
-import '../../../../core/presentation/widgets/custom_textfield.dart';
 import '../../../../core/utils/colors.dart';
-import '../../../../core/utils/enums.dart';
 import '../../../../core/utils/helper.dart';
 import '../../../../core/utils/styles.dart';
-import '../../../../core/utils/validation.dart';
 
 class FormTransaction extends StatefulWidget {
   const FormTransaction({super.key});
@@ -19,10 +16,26 @@ class FormTransaction extends StatefulWidget {
 }
 
 class _FormTransactionState extends State<FormTransaction> {
-  String? selectedKategori;
-  @override
-  void initState() {
-    super.initState();
+  void submitTransaksi() {
+    final providerTransaction = context.read<TransactionProvider>();
+    providerTransaction.submitTransaction().then((value) => {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Berhasil'),
+                  content: Text('Data transaksi berhasil disimpan.'),
+                  actions: [
+                    ElevatedButton(
+                      child: Text('OK'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                );
+              })
+        });
   }
 
   @override
@@ -38,9 +51,13 @@ class _FormTransactionState extends State<FormTransaction> {
         key: provider.formKey,
         child: Column(
           children: [
-            const Text(
-              'Tambah Data',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            const SizedBox(
+              width: 200,
+              child: Text(
+                'Tambah Data Transaksi',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
             ),
             largeVerticalSpacing(),
             DropdownButtonFormField<Kategori>(
@@ -53,7 +70,7 @@ class _FormTransactionState extends State<FormTransaction> {
               }).toList(),
               onChanged: (newValue) {
                 setState(() {
-                  selectedKategori = newValue!.idKategori.toString();
+                  provider.setSelectedKategori = newValue;
                 });
               },
               validator: (value) {
@@ -68,49 +85,87 @@ class _FormTransactionState extends State<FormTransaction> {
               ),
             ),
             mediumVerticalSpacing(),
-            CustomTextField(
-              title: "Jumlah",
+            TextFormField(
               controller: provider.dataJumlahController,
-              inputType: TextInputType.number,
-              isError: provider.dataJumlahError,
-              fieldValidator: ValidationHelper(
-                isError: (bool value) => provider.setDataJumlah = value,
-                typeField: TypeField.jumlah,
-              ).validate(),
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Jumlah',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                prefixIcon: Container(
+                  alignment: Alignment.center,
+                  width: 40,
+                  child: const Text(
+                    'RP',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Jumlah tidak boleh kosong';
+                }
+                return null;
+              },
             ),
             mediumVerticalSpacing(),
-            CustomTextField(
-              title: "Tanggal",
+            TextFormField(
               controller: provider.dataTanggalController,
-              inputType: TextInputType.datetime,
-              isError: provider.dataTanggalError,
-              fieldValidator: ValidationHelper(
-                isError: (bool value) => provider.setDataTanggal = value,
-                typeField: TypeField.tanggal,
-              ).validate(),
+              decoration: InputDecoration(
+                labelText: 'Tanggal',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+              ),
+              onTap: () async {
+                FocusScope.of(context).requestFocus(FocusNode());
+                DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2101),
+                );
+                if (pickedDate != null) {
+                  String formattedDate = pickedDate.toString().split(' ')[0];
+                  provider.dataTanggalController.text = formattedDate;
+                }
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Tanggal tidak boleh kosong';
+                }
+                return null;
+              },
             ),
             mediumVerticalSpacing(),
-            CustomTextField(
-              title: "Catatan",
+            TextFormField(
               controller: provider.dataCatatanController,
-              inputType: TextInputType.text,
-              isError: provider.dataCatatanError,
-              fieldValidator: ValidationHelper(
-                isError: (bool value) => provider.setDataCatatan = value,
-                typeField: TypeField.catatan,
-              ).validate(),
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                labelText: 'Catatan',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Catatan tidak boleh kosong';
+                }
+                return null;
+              },
             ),
             mediumVerticalSpacing(),
             largeVerticalSpacing(),
             CustomButton(
                 text: Text(
-                  "Tambah Data",
+                  "Tambah Transaksi",
                   style: txtButtonStyle,
                 ),
-                event: () async {
-                  // if (provider.formKey.currentState!.validate()) {
-                  //   await provider.submitTransaction();
-                  // }
+                event: () {
+                  if (provider.formKey.currentState!.validate()) {
+                    submitTransaksi();
+                  }
                 },
                 bgColor: primaryDarkColor),
           ],
