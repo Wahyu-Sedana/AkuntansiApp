@@ -6,11 +6,13 @@ abstract class Session {
   set setUserId(String userId);
   set setCurrency(String currency);
   set setnamaUsaha(String namaUsaha);
+  set setEmail(String email);
 
   bool get isLoggedIn;
   String get userId;
   String get currency;
   String get namaUsaha;
+  String get email;
 
   Future<void> clearSession();
 }
@@ -23,6 +25,11 @@ class SessionHelper implements Session {
   @override
   set setLoggedIn(bool login) {
     pref.setBool(IS_LOGGEDIN, login);
+  }
+
+  @override
+  set setEmail(String email) {
+    pref.setString(EMAIL, email);
   }
 
   @override
@@ -42,6 +49,9 @@ class SessionHelper implements Session {
 
   @override
   bool get isLoggedIn => pref.getBool(IS_LOGGEDIN) ?? false;
+
+  @override
+  String get email => pref.getString(EMAIL) ?? '';
 
   @override
   String get namaUsaha => pref.getString(NAMA_USAHA) ?? '';

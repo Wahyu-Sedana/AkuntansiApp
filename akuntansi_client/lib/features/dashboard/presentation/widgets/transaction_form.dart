@@ -165,6 +165,7 @@ class _FormTransactionState extends State<FormTransaction> {
                 event: () {
                   if (provider.formKey.currentState!.validate()) {
                     submitTransaksi();
+                    provider.getTransactions();
                   }
                 },
                 bgColor: primaryDarkColor),

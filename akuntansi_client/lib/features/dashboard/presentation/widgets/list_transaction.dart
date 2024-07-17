@@ -8,34 +8,30 @@ class TransactionListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TransactionProvider>(
-      builder: (context, transactionProvider, child) {
-        if (transactionProvider.isMakeRequest == true) {
-          transactionProvider.getTransactions();
-          return const Center(child: CircularProgressIndicator());
-        }
+    final transactionProvider = context.watch<TransactionProvider>();
+    if (transactionProvider.isMakeRequest) {
+      transactionProvider.getTransactions();
+      return const Center(child: CircularProgressIndicator());
+    }
 
-        final _data = transactionProvider.dataTransaction;
+    final _data = transactionProvider.dataTransaction;
 
-        if (_data == null || _data.isEmpty) {
-          return const Center(
-            child: Text(
-              'Tidak ada aktivitas!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-          );
-        }
-
-        return ListView.builder(
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          itemCount: _data.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: TransactionItem(data: _data[index]),
-            );
-          },
+    if (_data == null || _data.isEmpty) {
+      return const Center(
+        child: Text(
+          'Tidak ada aktivitas!',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+      );
+    }
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      itemCount: _data.length,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: TransactionItem(data: _data[index]),
         );
       },
     );
