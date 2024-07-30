@@ -8,7 +8,7 @@ import 'package:dio/dio.dart';
 abstract class TransactionUseCase {
   Future<Either<Failure, List<TransactionModel>>> call(int userId);
   Future<Either<Failure, TransactionResponseModel>> callSaldo(int userId);
-  Future<Either<Failure, KategoriResponseModel>> callKategori(int userId);
+  Future<Either<Failure, List<Kategori>>> callKategori(int userId);
   Future<Either<Failure, TransactionResponseModel>> callAddTransaction(
       int idKategori, int jumlah, String tanggal, String catatan);
 }
@@ -27,7 +27,7 @@ class TransactionUseCaseImplementation implements TransactionUseCase {
   }
 
   @override
-  Future<Either<Failure, KategoriResponseModel>> callKategori(int userId) async {
+  Future<Either<Failure, List<Kategori>>> callKategori(int userId) async {
     final result = await transactionRepository.getKategori(userId);
     return result.fold((l) => Left(l), (r) {
       return Right(r);

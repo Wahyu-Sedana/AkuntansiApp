@@ -1,9 +1,9 @@
 class KategoriResponseModel {
   String? message;
   bool? success;
-  List<Kategori>? data;
+  List<Kategori> data;
 
-  KategoriResponseModel({required this.message, required this.success, this.data});
+  KategoriResponseModel({required this.message, required this.success, required this.data});
 
   factory KategoriResponseModel.fromJson(Map<String, dynamic> json) {
     return KategoriResponseModel(
@@ -17,7 +17,7 @@ class KategoriResponseModel {
     return {
       'message': message,
       'success': success,
-      'data': data?.map((e) => e.toJson()).toList(),
+      'data': data.map((e) => e.toJson()).toList(),
     };
   }
 }

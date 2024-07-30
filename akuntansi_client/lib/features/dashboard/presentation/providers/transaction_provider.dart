@@ -2,6 +2,8 @@ import 'package:akuntansi_client/core/utils/injection.dart';
 import 'package:akuntansi_client/core/utils/session.dart';
 import 'package:akuntansi_client/features/dashboard/data/models/kategori_models.dart';
 import 'package:akuntansi_client/features/dashboard/domain/usecases/transaction_usecase.dart';
+import 'package:akuntansi_client/features/dashboard/presentation/providers/state/kategori_state.dart';
+import 'package:akuntansi_client/features/dashboard/presentation/providers/state/transaction_state.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/helper.dart';
@@ -16,14 +18,10 @@ class TransactionProvider with ChangeNotifier {
   List<Kategori>? _dataKategori = [];
   Kategori? _selectedKategori;
   bool _isSaldoVisible = false;
-  bool _isMakeRequest = true;
   bool _isMakeRequestKategori = true;
   int? _totalSaldo;
   int? _totalPemasukan;
   int? _totalPengeluaran;
-
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
 
   final TextEditingController _dataJumlahController = TextEditingController();
   final TextEditingController _dataCatatanController = TextEditingController();
@@ -40,7 +38,6 @@ class TransactionProvider with ChangeNotifier {
   bool _dataCatatanError = false;
 
   bool get isSaldoVisible => _isSaldoVisible;
-  bool get isMakeRequest => _isMakeRequest;
   bool get isMakeRequestKateogori => _isMakeRequestKategori;
 
   set setDataKategori(bool val) {
@@ -113,34 +110,17 @@ class TransactionProvider with ChangeNotifier {
   List<Kategori>? get dataKategori => _dataKategori;
   Kategori? get selectedKategori => _selectedKategori;
 
-  Future<void> getTransactions() async {
-    try {
-      final session = locator<Session>();
-      if (_isMakeRequest) {
-        final result = await transactionUseCaseImplementation.callSaldo(int.parse(session.userId));
-        notifyListeners();
-        result.fold(
-          (failure) {
-            logMe("error");
-            print(failure.message);
-            logMe(failure);
-            throw Exception(failure.message);
-          },
-          (data) {
-            _totalSaldo = data.totalSaldo ?? 0;
-            _totalPemasukan = data.totalPemasukan ?? 0;
-            _totalPengeluaran = data.totalPengeluaran ?? 0;
-            setDataTransaction = data.transactionModel;
-            _isMakeRequest = false;
-            print('total pemasukan: ${totalPemasukan}');
-            notifyListeners();
-          },
-        );
-      }
-    } catch (e) {
-      _isMakeRequest = false;
-      logMe(e);
-    }
+  Stream<TransactionState> getTransaction() async* {
+    final session = locator<Session>();
+    yield TransactionLoading();
+    final result = await transactionUseCaseImplementation.callSaldo(int.parse(session.userId));
+    yield* result.fold((failure) async* {
+      logMe("error");
+      logMe(failure);
+      yield TransactionFailure(failure: failure.message);
+    }, (data) async* {
+      yield TransactionLoaded(data: data.transactionModel);
+    });
   }
 
   Future<void> getKategoriData() async {
@@ -157,7 +137,7 @@ class TransactionProvider with ChangeNotifier {
             throw Exception(failure.message);
           },
           (data) {
-            setDataListKategori = data.data;
+            setDataListKategori = data;
             _isMakeRequestKategori = false;
             notifyListeners();
           },
@@ -177,7 +157,6 @@ class TransactionProvider with ChangeNotifier {
           int.parse(dataJumlahController.text),
           dataTanggalController.text,
           dataCatatanController.text);
-      // print('hasil form data: $formData');
 
       result.fold(
         (failure) {
@@ -186,9 +165,9 @@ class TransactionProvider with ChangeNotifier {
           logMe(failure);
           throw Exception(failure.message);
         },
-        (success) async {
+        (success) {
           clearFields();
-          await getTransactions();
+          getTransaction();
           notifyListeners();
         },
       );

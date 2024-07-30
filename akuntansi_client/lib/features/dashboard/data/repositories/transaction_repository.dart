@@ -11,7 +11,7 @@ import '../../../../core/utils/helper.dart';
 abstract class TransactionRepository {
   Future<Either<Failure, List<TransactionModel>>> getTransaction(int userId);
   Future<Either<Failure, TransactionResponseModel>> getTotalSaldo(int userId);
-  Future<Either<Failure, KategoriResponseModel>> getKategori(int userId);
+  Future<Either<Failure, List<Kategori>>> getKategori(int userId);
   Future<Either<Failure, TransactionResponseModel>> addTransaction(
       int idKategori, int jumlah, String tanggal, String catatan);
 }
@@ -40,7 +40,7 @@ class TransactionRepositoryImplementation implements TransactionRepository {
   }
 
   @override
-  Future<Either<Failure, KategoriResponseModel>> getKategori(int userId) async {
+  Future<Either<Failure, List<Kategori>>> getKategori(int userId) async {
     if (!await networkInfo.isConnected) {
       return const Left(ConnectionFailure(
           message:

@@ -8,7 +8,7 @@ abstract class TransactionDataSource {
   Future<TransactionResponseModel> getTotalSaldo(int userId);
   Future<TransactionResponseModel> addTransaction(
       int idKategori, int jumlah, String tanggal, String catatan);
-  Future<KategoriResponseModel> getKategori(int userId);
+  Future<List<Kategori>> getKategori(int userId);
 }
 
 class TransactionDataSourceImplementation implements TransactionDataSource {
@@ -32,7 +32,7 @@ class TransactionDataSourceImplementation implements TransactionDataSource {
   }
 
   @override
-  Future<KategoriResponseModel> getKategori(int userId) async {
+  Future<List<Kategori>> getKategori(int userId) async {
     String url = 'category';
     try {
       final response = await dio.post(
@@ -40,7 +40,7 @@ class TransactionDataSourceImplementation implements TransactionDataSource {
         data: {'id_user': userId},
       );
       final model = KategoriResponseModel.fromJson(response.data);
-      return model;
+      return model.data;
     } catch (e) {
       logMe(e);
       rethrow;
